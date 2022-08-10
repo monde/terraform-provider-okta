@@ -312,6 +312,9 @@ func getCachedConfig(ctx context.Context, d *schema.ResourceData, configureFunc 
 	config := c.(*Config)
 	transport := config.oktaClient.GetConfig().HttpClient.Transport
 
+	if mgr.VCRMode() == recorder.ModeRecording {
+		os.MkdirAll(mgr.CassettesPath, 0755)
+	}
 	rec, err := recorder.NewAsMode(mgr.CassettePath(), mgr.VCRMode(), transport)
 	if err != nil {
 		return nil, diag.FromErr(err)
